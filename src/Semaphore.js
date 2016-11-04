@@ -24,10 +24,10 @@ export default class Semaphore {
   }
 
   /**
-   * Same as wait except the promise returned gets resolved with <code>false</code> if no permit becomes available in time.
+   * Same as wait except the promise returned gets resolved with false if no permit becomes available in time.
    * @param {number} milliseconds The time spent waiting before the wait is aborted.
-   * @return {Promise} A promise that gets resolved with <code>true</code> when execution is allowed to proceed or
-   * <code>false</code> if the time given elapses before a permit becomes available.
+   * @return {Promise} A promise that gets resolved with true when execution is allowed to proceed or
+   * false if the time given elapses before a permit becomes available.
    */
   async waitFor(milliseconds) {
     if (this._permits > 0) {
@@ -54,8 +54,8 @@ export default class Semaphore {
   }
 
   /**
-   * Synchronous function used to determine whether a permit is available.
-   * @return {boolean} True if there's at least one permit available.
+   * Synchronous function that tries to acquire a permit and returns true if successful, false otherwise.
+   * @return {boolean} Whether a permit could be acquired.
    */
   tryAcquire() {
     if (this._permits > 0) {
