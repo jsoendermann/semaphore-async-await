@@ -1,16 +1,22 @@
 {
   "name": "semaphore-async-await",
   "version": "0.1.0",
+  "author": {
+    "name": "Jan Soendermann",
+    "email": "jan.soendermann+npm@gmail.com"
+  },
   "license": "MIT",
   "dependencies": {
   },
   "scripts": {
     "build": "babel src -d lib",
+    "prepublish": "npm run build",
     "test": "node_modules/jasmine-es6/bin/jasmine.js"
   },
   "engines": {
     "node": ">=4.1"
   },
+  "main": "lib/Semaphore.js",
   "devDependencies": {
     "babel-cli": "^6.16.0",
     "babel-eslint": "^7.0.0",
