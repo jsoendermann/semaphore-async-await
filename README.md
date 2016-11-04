@@ -13,7 +13,7 @@ This package can be used to synchronize functions that span multiple iterations 
 import Semaphore from 'semaphore-async-await';
 
 (async () => {
-  
+
   // A Semaphore with one permit is a lock
   const lock = new Semaphore(1);
 
@@ -69,7 +69,7 @@ import Semaphore from 'semaphore-async-await';
 ## Methods
 
 <dl>
-<dt><a href="#wait">Semaphore(premits)</a> ⇒ <code>Semaphore</code></dt>
+<dt><a href="#wait">Semaphore(permits)</a> ⇒ <code>Semaphore</code></dt>
 <dd><p>Creates a semaphore with the given number of permits, i.e. things being allowed to run in parallel. To create a lock that only lets one thing run at a time, give it one permit. This number can also be negative.</p>
 </dd>
 <dt><a href="#wait">wait()</a> ⇒ <code>Promise</code></dt>
