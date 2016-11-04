@@ -1,11 +1,15 @@
 {
   "name": "semaphore-async-await",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": {
     "name": "Jan Soendermann",
     "email": "jan.soendermann+npm@gmail.com"
   },
   "homepage": "https://github.com/jsoendermann/semaphore-async-await",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jsoendermann/semaphore-async-await.git"
+  },
   "license": "MIT",
   "dependencies": {
   },
