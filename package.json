@@ -1,6 +1,6 @@
 {
   "name": "semaphore-async-await",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": {
     "name": "Jan Soendermann",
     "email": "jan.soendermann+npm@gmail.com"
@@ -11,8 +11,7 @@
     "url": "git@github.com:jsoendermann/semaphore-async-await.git"
   },
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "scripts": {
     "build": "babel src -d lib",
     "prepublish": "npm run build",
@@ -22,17 +21,24 @@
     "node": ">=4.1"
   },
   "main": "lib/Semaphore.js",
+  "types": "lib/Semaphore.d.ts",
   "devDependencies": {
     "babel-cli": "^6.16.0",
     "babel-eslint": "^7.0.0",
     "babel-plugin-transform-async-to-generator": "^6.16.0",
     "babel-plugin-transform-builtin-extend": "^1.1.0",
+    "babel-preset-es2015": "^6.18.0",
     "babel-preset-es2015-node": "^6.1.1",
     "eslint": "^3.8.0",
     "eslint-config-airbnb": "^12.0.0",
     "eslint-plugin-import": "^1.16.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.4.1",
-    "jasmine-es6": "^0.4.0"
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-typescript": "^3.1.3",
+    "jasmine-es6": "^0.4.0",
+    "merge2": "^1.0.2",
+    "typescript": "^2.0.10"
   }
 }

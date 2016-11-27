@@ -1,5 +1,5 @@
 {
-  "presets": ["es2015-node"],
+  "presets": ["babel-preset-es2015"],
   "plugins": [
     "transform-async-to-generator"
   ]
