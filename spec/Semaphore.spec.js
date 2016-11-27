@@ -1,10 +1,8 @@
 /* global describe, it, expect */
 /* eslint prefer-arrow-callback:0, func-names:0, global-require:0, import/no-extraneous-dependencies:0 */
-
 import install from 'jasmine-es6';
 
 install();
-
 
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -20,10 +18,7 @@ describe('Semaphore', function () {
       global = local + 1;
     };
 
-    f();
-    f();
-
-    await wait(1000);
+    f(); f(); await wait(1000);
 
     expect(global).toEqual(1);
   });
@@ -40,10 +35,7 @@ describe('Semaphore', function () {
       lock.signal();
     };
 
-    f();
-    f();
-
-    await wait(1500);
+    f(); f(); await wait(1500);
 
     expect(global).toEqual(2);
   });
@@ -60,7 +52,6 @@ describe('Semaphore', function () {
 
     lock.execute(f);
     lock.execute(f);
-
     await wait(1500);
 
     expect(global).toEqual(2);
@@ -143,9 +134,13 @@ describe('Semaphore', function () {
     const waitSuccessful = await sem.waitFor(100);
     expect(waitSuccessful).toBeFalsy();
     f();
-
     await wait(1500);
 
     expect(global).toEqual(2);
+  });
+
+  it('drain permits', async () => {
+    const sem = new Semaphore(3);
+    expect(sem.drainPermits()).toEqual(3);
   });
 });

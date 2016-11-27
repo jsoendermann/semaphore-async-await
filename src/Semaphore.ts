@@ -1,16 +1,29 @@
-/** Class representing a semaphore */
+/** Class representing a semaphore
+ * Semaphores are initialized with a number of permits that get aquired and released
+ * over the lifecycle of the Semaphore. Functions can wait and stop executing until
+ * a permit gets released (the method for which is called signal for historical reasons.)
+ * 
+ * Locks that only allow one execution of a critical section are a special case of
+ * Semaphores. To construct a lock, initialize a Semaphore with a permit count of 1.
+ * 
+ * This Semaphore class is implemented with the help of promises that get returned
+ * by functions that wait for permits to become available. This makes it possible
+ * to use ES7 async/awaits to synchronize your code.
+*/
 export default class Semaphore {
-  private promiseResolvers: Array<(v: boolean) => void> = [];
+  private promiseResolverQueue: Array<(v: boolean) => void> = [];
 
   /**
    * Creates a semaphore.
    * @param {number} permits The number of permits, i.e. things being allowed to run in parallel.
-   * To create a lock that only lets one thing run at a time, set this to 1. This number can also be negative.
+   * To create a lock that only lets one thing run at a time, set this to 1.
+   * This number can also be negative.
    */
   constructor(private permits: number) {}
 
   /**
-   * Returns a promise used to wait for a permit to become available.
+   * Returns a promise used to wait for a permit to become available. This method is supposed
+   * to be awaited on.
    * @return {Promise} A promise that gets resolved when execution is allowed to proceed.
    */
   async wait(): Promise<boolean> {
@@ -18,7 +31,10 @@ export default class Semaphore {
       this.permits -= 1;
       return Promise.resolve(true);
     }
-    return new Promise<boolean>(resolver => this.promiseResolvers.push(resolver));
+
+    // If there is no permit available, we return a promise that resolves once the semaphore gets
+    // signaled enough times that permits is equal to one.
+    return new Promise<boolean>(resolver => this.promiseResolverQueue.push(resolver));
   }
 
   /**
@@ -33,18 +49,30 @@ export default class Semaphore {
       return Promise.resolve(true);
     }
 
+    // We save the resolver function in the current scope so that we can resolve the promise
+    // if the time expires.
     let resolver: (v: boolean) => void;
     const promise = new Promise<boolean>(r => {
       resolver = r;
     });
 
-    this.promiseResolvers.push(resolver);
+    // The saved resolver gets added to our list of promise resolvers so that it gets a chance
+    // to be resolved as a result of a call to signal().
+    this.promiseResolverQueue.push(resolver);
 
     setTimeout(() => {
-      const index = this.promiseResolvers.indexOf(resolver);
+      // We have to remove the promise resolver from our list. Resolving it twice would not be
+      // an issue but signal() always takes the next resolver from the queue and resolves it which
+      // would swallow a permit if we didn't remove it.
+      const index = this.promiseResolverQueue.indexOf(resolver);
       if (index !== -1) {
-        this.promiseResolvers.splice(index, 1);
+        this.promiseResolverQueue.splice(index, 1);
+      } else {
+        // This is weird... TODO Think about what the best course of action would be at this point.
+        // Probably do nothing.
       }
+      
+      // false because the wait was unsuccessful.
       resolver(false);
     }, milliseconds);
 
@@ -60,7 +88,22 @@ export default class Semaphore {
       this.permits -= 1;
       return true;
     }
+
     return false;
+  }
+
+  /**
+   * Acquires and returns all permits that are currently available
+   * @return {number} Acquired permits.
+   */
+  drainPermits(): number {
+    if (this.permits > 0) {
+      const permitCount = this.permits;
+      this.permits = 0;
+      return permitCount;
+    }
+
+    return 0;
   }
 
   /**
@@ -70,13 +113,15 @@ export default class Semaphore {
   signal(): void {
     this.permits += 1;
 
-    if (this.permits >= 1 && this.promiseResolvers.length > 0) {
-      if (this.permits > 1) {
-        throw new Error('this._permits should never be > 0 when there is someone waiting.');
-      }
-
+    if (this.permits > 1 && this.promiseResolverQueue.length > 0) {
+      throw new Error('this._permits should never be > 0 when there is someone waiting.');
+    } else if (this.permits === 1 && this.promiseResolverQueue.length > 0) {
+      // If there is someone else waiting, immediately consume the permit that was released
+      // at the beginning of this function and let the waiting function resume.
       this.permits -= 1;
-      this.promiseResolvers.shift()(true);
+
+      // promiseResolverQueue is an array of functions
+      this.promiseResolverQueue.shift()(true);
     }
   }
 
