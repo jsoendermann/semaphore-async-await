@@ -22,5 +22,6 @@ gulp.task('default', () => {
   ]);
 });
 
-
-gulp.watch('src/**/*.ts', ['default']);
+gulp.task('watch', () => {
+  gulp.watch('src/**/*.ts', ['default']);
+});
