@@ -1,6 +1,6 @@
 /** Class representing a semaphore */
 export default class Semaphore {
-  private promiseResolvers: Array<(v: boolean) => void>;
+  private promiseResolvers: Array<(v: boolean) => void> = [];
 
   /**
    * Creates a semaphore.
