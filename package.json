@@ -1,6 +1,6 @@
 {
   "name": "semaphore-async-await",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": {
     "name": "Jan Soendermann",
     "email": "jan.soendermann+npm@gmail.com"
@@ -20,8 +20,8 @@
   "engines": {
     "node": ">=4.1"
   },
-  "main": "lib/Semaphore.js",
-  "types": "lib/Semaphore.d.ts",
+  "main": "./lib/Semaphore.js",
+  "typings": "./lib/Semaphore.d.ts",
   "devDependencies": {
     "babel-cli": "^6.16.0",
     "babel-eslint": "^7.0.0",
