@@ -128,11 +128,12 @@ export default class Semaphore {
   /**
    * Schedules func to be called once a permit becomes available.
    * @param {function} func - The function to be executed.
+   * @return {any} A promise that gets resolved with the return value of the function..
    */
-  async execute(func: () => void) {
+  async execute(func: () => any): Promise<any> {
     await this.wait();
     try {
-      await func();
+      return await func();
     } finally {
       this.signal();
     }

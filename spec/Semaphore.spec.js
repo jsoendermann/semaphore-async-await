@@ -143,4 +143,17 @@ describe('Semaphore', function () {
     const sem = new Semaphore(3);
     expect(sem.drainPermits()).toEqual(3);
   });
+
+  it('execute return value', async () => {
+    const sem = new Semaphore(1);
+    const ret = await sem.execute(() => 1);
+    expect(ret).toEqual(1);
+
+    const t = [2, 1];
+    const r = await Promise.all(t.map(time => sem.execute(async () => {
+      await wait(time * 1000);
+      return time * 1000;
+    })));
+    expect(r).toEqual([2000, 1000]);
+  });
 });
