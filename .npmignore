@@ -1,7 +1,9 @@
 src
 spec
-.babelrc
+node_modules
+.babelrc.json
 .eslintrc.json
 .gitignore
+gulpfile.json
+tsconfig.json
 yarn.lock
-node_modules
