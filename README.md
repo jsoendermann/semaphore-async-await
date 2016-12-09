@@ -85,7 +85,7 @@ import Semaphore from 'semaphore-async-await';
 <dd><p>Increases the number of permits by one. If there are other functions waiting, one of them will
 continue to execute in a future iteration of the event loop.</p>
 </dd>
-<dt><a href="#execute">execute(func)</a></dt>
+<dt><a href="#execute">execute(func)</a> ⇒ <code>Promise</code></dt>
 <dd><p>Schedules func to be called once a permit becomes available.</p>
 </dd>
 </dl>
