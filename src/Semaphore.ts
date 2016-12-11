@@ -128,9 +128,9 @@ export default class Semaphore {
   /**
    * Schedules func to be called once a permit becomes available.
    * @param {function} func - The function to be executed.
-   * @return {any} A promise that gets resolved with the return value of the function..
+   * @return {T} A promise that gets resolved with the return value of the function.
    */
-  async execute(func: () => any): Promise<any> {
+  async execute<T>(func: () => T): Promise<T> {
     await this.wait();
     try {
       return await func();
