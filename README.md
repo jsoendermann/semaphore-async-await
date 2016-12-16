@@ -86,7 +86,7 @@ import Semaphore from 'semaphore-async-await';
 continue to execute in a future iteration of the event loop.</p>
 </dd>
 <dt><a href="#execute">execute(func)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Schedules func to be called once a permit becomes available.</p>
+<dd><p>Schedules func to be called once a permit becomes available. Returns a promise that resolves to the return value of the function.</p>
 </dd>
 </dl>
 
