@@ -4,7 +4,7 @@ import install from 'jasmine-es6';
 
 install();
 
-const wait = (ms) => new Promise(r => setTimeout(r, ms));
+const wait = ms => new Promise(r => setTimeout(r, ms));
 
 describe('Semaphore', function () {
   const Semaphore = require('../dist/Semaphore').default;
@@ -155,5 +155,22 @@ describe('Semaphore', function () {
       return time * 1000;
     })));
     expect(r).toEqual([2000, 1000]);
+  });
+
+  it('should alias acquire and lock to wait and signal', async () => {
+    let global = 0;
+    const lock = new Semaphore(1);
+
+    const f = async () => {
+      await lock.acquire();
+      const local = global;
+      await wait(500);
+      global = local + 1;
+      lock.release();
+    };
+
+    f(); f(); await wait(1500);
+
+    expect(global).toEqual(2);
   });
 });

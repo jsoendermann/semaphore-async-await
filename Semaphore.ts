@@ -8,7 +8,7 @@
  * 
  * This Semaphore class is implemented with the help of promises that get returned
  * by functions that wait for permits to become available. This makes it possible
- * to use ES7 async/awaits to synchronize your code.
+ * to use async/awaits to synchronize your code.
 */
 export default class Semaphore {
   private promiseResolverQueue: Array<(v: boolean) => void> = [];
@@ -22,8 +22,7 @@ export default class Semaphore {
   constructor(private permits: number) {}
 
   /**
-   * Returns a promise used to wait for a permit to become available. This method is supposed
-   * to be awaited on.
+   * Returns a promise used to wait for a permit to become available. This method should be awaited on.
    * @return {Promise} A promise that gets resolved when execution is allowed to proceed.
    */
   async wait(): Promise<boolean> {
@@ -35,6 +34,14 @@ export default class Semaphore {
     // If there is no permit available, we return a promise that resolves once the semaphore gets
     // signaled enough times that permits is equal to one.
     return new Promise<boolean>(resolver => this.promiseResolverQueue.push(resolver));
+  }
+
+  /**
+   * Alias for [wait]{@link Semaphore#wait}.
+   * @return {Promise} A promise that gets resolved when execution is allowed to proceed.
+   */
+  async acquire(): Promise<boolean> {
+    return this.wait();
   }
 
   /**
@@ -93,7 +100,7 @@ export default class Semaphore {
   }
 
   /**
-   * Acquires and returns all permits that are currently available
+   * Acquires all permits that are currently available and returns the number of acquired permits.
    * @return {number} Acquired permits.
    */
   drainPermits(): number {
@@ -125,6 +132,13 @@ export default class Semaphore {
         nextResolver(true);
       }
     }
+  }
+
+  /**
+   * This is an alias for [signal]{@link Semaphore#signal}.
+   */
+  release(): void {
+    this.signal();
   }
 
   /**
