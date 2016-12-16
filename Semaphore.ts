@@ -139,7 +139,7 @@ export default class Semaphore {
   }
 
   /**
-   * A for {@linkcode Semaphore.signal}.
+   * Alias for {@linkcode Semaphore.signal}.
    */
   release(): void {
     this.signal();
