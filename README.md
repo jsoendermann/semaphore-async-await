@@ -3,7 +3,7 @@
 A promise-based semaphore implementation suitable to be used with ES7 async/await.
 
 ## But JavaScript is single-threaded and doesn't need semaphores!
-This package can be used to synchronize functions that span multiple iterations of the event loop and prevent other code from being executed while your function is waiting for some event.
+This package can be used to synchronize functions that span multiple iterations of the event loop and prevent other code from being executed while your function is waiting.
 
 ## Install
 ```yarn add semaphore-async-await```
