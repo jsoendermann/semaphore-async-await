@@ -1,9 +1,8 @@
-src
+Semaphore.ts
 spec
 node_modules
 .babelrc.json
-.eslintrc.json
 .gitignore
-gulpfile.json
 tsconfig.json
+tslint.json
 yarn.lock

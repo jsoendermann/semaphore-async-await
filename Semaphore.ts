@@ -51,7 +51,7 @@ export default class Semaphore {
 
     // We save the resolver function in the current scope so that we can resolve the promise
     // if the time expires.
-    let resolver: (v: boolean) => void;
+    let resolver: (v: boolean) => void = b => void(0);
     const promise = new Promise<boolean>(r => {
       resolver = r;
     });
@@ -120,8 +120,10 @@ export default class Semaphore {
       // at the beginning of this function and let the waiting function resume.
       this.permits -= 1;
 
-      // promiseResolverQueue is an array of functions
-      this.promiseResolverQueue.shift()(true);
+      const nextResolver = this.promiseResolverQueue.shift();
+      if (nextResolver) {
+        nextResolver(true);
+      }
     }
   }
 

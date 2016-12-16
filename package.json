@@ -11,9 +11,8 @@
     "url": "git@github.com:jsoendermann/semaphore-async-await.git"
   },
   "license": "MIT",
-  "dependencies": {},
   "scripts": {
-    "build": "gulp",
+    "build": "tsc",
     "prepublish": "npm run build",
     "test": "node_modules/jasmine-es6/bin/jasmine.js"
   },
@@ -23,23 +22,9 @@
   "main": "./lib/Semaphore.js",
   "typings": "./lib/Semaphore.d.ts",
   "devDependencies": {
-    "babel-cli": "^6.16.0",
-    "babel-eslint": "^7.0.0",
-    "babel-plugin-transform-async-to-generator": "^6.16.0",
-    "babel-plugin-transform-builtin-extend": "^1.1.0",
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-es2015-node": "^6.1.1",
-    "eslint": "^3.8.0",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-plugin-import": "^1.16.0",
-    "eslint-plugin-jsx-a11y": "^2.2.3",
-    "eslint-plugin-react": "^6.4.1",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
-    "gulp-typescript": "^3.1.3",
+    "@types/core-js": "^0.9.35",
     "jasmine-es6": "^0.4.0",
-    "merge2": "^1.0.2",
-    "typescript": "^2.0.10"
+    "tslint": "^4.1.0",
+    "typescript": "^2.1.4"
   }
 }

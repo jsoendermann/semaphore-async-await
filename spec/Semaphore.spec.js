@@ -7,7 +7,7 @@ install();
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
 describe('Semaphore', function () {
-  const Semaphore = require('../lib/Semaphore').default;
+  const Semaphore = require('../dist/Semaphore').default;
 
   it('without semaphore', async function () {
     let global = 0;
