@@ -13,6 +13,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc",
+    "generate-docs": "typedoc --tsconfig ./tsconfig-typedoc.json --mode file --module system --out docs ./Semaphore.ts",
     "prepublish": "npm run build",
     "test": "node_modules/jasmine-es6/bin/jasmine.js"
   },
@@ -25,6 +26,7 @@
     "@types/core-js": "^0.9.35",
     "jasmine-es6": "^0.4.0",
     "tslint": "^4.1.0",
+    "typedoc": "^0.5.1",
     "typescript": "^2.1.4"
   }
 }

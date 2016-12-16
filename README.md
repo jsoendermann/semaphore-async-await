@@ -1,9 +1,37 @@
 # JavaScript Semaphore
 
-A promise-based semaphore implementation suitable to be used with ES7 async/await.
+A promise-based semaphore implementation suitable to be used with async/await.
 
 ## But JavaScript is single-threaded and doesn't need semaphores!
 This package can be used to synchronize functions that span multiple iterations of the event loop and prevent other code from being executed while your function is waiting.
+
+Suppose you have a function
+
+```javascript
+async function criticalFunction() {
+  const data = await getDataFromDb();
+  const modifiedData = await asynchronouslyDoStuffWithData(data);
+  await writeDataBackToDb(modifiedData);
+}
+```
+
+Calling this function repeatedly could lead to overlapping read/writes. To avoid this problem, a lock can be added like so:
+
+```javascript
+const lock = new Semaphore(1);
+
+async function criticalFunction() {
+  await lock.acquire();
+
+  const data = await getDataFromDb();
+  const modifiedData = await asynchronouslyDoStuffWithData(data);
+  await writeDataBackToDb(modifiedData);
+
+  lock.release();
+}
+```
+
+Asynchronous functions like ```criticalFunction``` are executed in multiple chunks of code on the event loop, this package makes it possible to enforce an ordering in these chunks.
 
 ## Install
 ```yarn add semaphore-async-await```
@@ -66,31 +94,7 @@ import Semaphore from 'semaphore-async-await';
 })();
 ```
 
-## Methods
-
-<dl>
-<dt><a href="#wait">Semaphore(permits)</a> ⇒ <code>Semaphore</code></dt>
-<dd><p>Creates a semaphore with the given number of permits, i.e. things being allowed to run in parallel. To create a lock that only lets one thing run at a time, give it one permit. This number can also be negative.</p>
-</dd>
-<dt><a href="#wait">wait()</a> ⇒ <code>Promise</code></dt>
-<dd><p>Returns a promise used to wait for a permit to become available.</p>
-</dd>
-<dt><a href="#waitFor">waitFor(milliseconds)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Same as wait except the promise returned gets resolved with false if no permit becomes available in time.</p>
-</dd>
-<dt><a href="#tryAcquire">tryAcquire()</a> ⇒ <code>boolean</code></dt>
-<dd><p>Synchronous function that tries to acquire a permit and returns true if successful, false otherwise.</p>
-</dd>
-<dt><a href="#signal">signal()</a></dt>
-<dd><p>Increases the number of permits by one. If there are other functions waiting, one of them will
-continue to execute in a future iteration of the event loop.</p>
-</dd>
-<dt><a href="#execute">execute(func)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Schedules func to be called once a permit becomes available. Returns a promise that resolves to the return value of the function.</p>
-</dd>
-</dl>
-
-
+[## Docs](http://www.google.com)
 
 ## License
 MIT

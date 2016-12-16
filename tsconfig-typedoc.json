@@ -1,0 +1,12 @@
+{
+  "include": [
+    "Semaphore.ts"
+  ],
+  "compilerOptions": {
+    "target": "es6",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "declaration": true,
+    "outDir": "dist"
+  }
+}

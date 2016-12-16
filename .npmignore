@@ -4,5 +4,7 @@ node_modules
 .babelrc.json
 .gitignore
 tsconfig.json
+tsconfig-typedoc.json
 tslint.json
 yarn.lock
+docs
