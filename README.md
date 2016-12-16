@@ -36,6 +36,8 @@ Asynchronous functions like ```criticalFunction``` are executed in multiple chun
 ## Install
 ```yarn add semaphore-async-await```
 
+[<h2>API</h2>](http://jsoendermann.github.io/semaphore-async-await/classes/semaphore.html)
+
 ## Usage
 ```javascript
 import Semaphore from 'semaphore-async-await';
@@ -93,8 +95,6 @@ import Semaphore from 'semaphore-async-await';
   console.log(globalVar === 3);
 })();
 ```
-
-[## Docs](http://www.google.com)
 
 ## License
 MIT
