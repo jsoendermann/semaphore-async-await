@@ -11,7 +11,7 @@ Suppose you have a function
 async function criticalFunction() {
   const data = await getDataFromDb();
   const modifiedData = await asynchronouslyDoStuffWithData(data);
-  await writeDataBackToDb(modifiedData);
+  return writeDataBackToDb(modifiedData);
 }
 ```
 
@@ -20,12 +20,10 @@ Calling this function repeatedly could lead to overlapping read/writes. To avoid
 ```javascript
 const lock = new Semaphore(1);
 
-async function criticalFunction() {
+async function criticalFunctionSync() {
   await lock.acquire();
 
-  const data = await getDataFromDb();
-  const modifiedData = await asynchronouslyDoStuffWithData(data);
-  await writeDataBackToDb(modifiedData);
+  await criticalFunction();
 
   lock.release();
 }
