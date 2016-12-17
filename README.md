@@ -20,7 +20,7 @@ Calling this function repeatedly could lead to overlapping read/writes. To avoid
 ```javascript
 const lock = new Semaphore(1);
 
-async function criticalFunctionSync() {
+async function criticalFunctionSynchronous() {
   await lock.acquire();
 
   await criticalFunction();
