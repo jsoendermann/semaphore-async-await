@@ -925,18 +925,16 @@ img { max-width: 100%; }
 			<pre><code class="lang-javascript"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">criticalFunction</span>(<span class="hljs-params"></span>) </span>{
   <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> getDataFromDb();
   <span class="hljs-keyword">const</span> modifiedData = <span class="hljs-keyword">await</span> asynchronouslyDoStuffWithData(data);
-  <span class="hljs-keyword">await</span> writeDataBackToDb(modifiedData);
+  <span class="hljs-keyword">return</span> writeDataBackToDb(modifiedData);
 }
 </code></pre>
 			<p>Calling this function repeatedly could lead to overlapping read/writes. To avoid this problem, a lock can be added like so:</p>
 			<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> lock = <span class="hljs-keyword">new</span> Semaphore(<span class="hljs-number">1</span>);
 
-<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">criticalFunction</span>(<span class="hljs-params"></span>) </span>{
+<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">criticalFunctionSynchronous</span>(<span class="hljs-params"></span>) </span>{
   <span class="hljs-keyword">await</span> lock.acquire();
 
-  <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> getDataFromDb();
-  <span class="hljs-keyword">const</span> modifiedData = <span class="hljs-keyword">await</span> asynchronouslyDoStuffWithData(data);
-  <span class="hljs-keyword">await</span> writeDataBackToDb(modifiedData);
+  <span class="hljs-keyword">await</span> criticalFunction();
 
   lock.release();
 }
