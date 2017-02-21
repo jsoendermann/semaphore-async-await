@@ -15,7 +15,7 @@
     "build": "tsc",
     "generate-docs": "typedoc --tsconfig ./tsconfig-typedoc.json --theme minimal --mode file --module system --out docs ./Semaphore.ts",
     "prepublish": "npm run build",
-    "test": "node_modules/jasmine-es6/bin/jasmine.js && ava"
+    "test": "node_modules/jasmine-es6/bin/jasmine.js"
   },
   "engines": {
     "node": ">=4.1"
@@ -24,7 +24,6 @@
   "typings": "./dist/Semaphore.d.ts",
   "devDependencies": {
     "@types/core-js": "^0.9.35",
-    "ava": "^0.18.2",
     "jasmine-es6": "^0.4.0",
     "tslint": "^4.1.0",
     "typedoc": "^0.5.1",
