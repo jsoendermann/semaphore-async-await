@@ -1,4 +1,2 @@
-import { Semaphore } from './Semaphore'
-import { SemaphoreShepherd } from './SemaphoreShepherd'
-
-export default { Semaphore, SemaphoreShepherd }
+export * from './Semaphore'
+export * from './SemaphoreShepherd'

@@ -1,5 +1,5 @@
-/** 
- * Semaphores are initialized with a number of _permits that get aquired and released
+/** Class representing a semaphore
+ * Semaphores are initialized with a number of permits that get aquired and released
  * over the lifecycle of the Semaphore. These permits limit the number of simultaneous
  * executions of the code that the Semaphore synchronizes. Functions can wait and stop 
  * executing until a permit becomes available.
@@ -11,8 +11,8 @@
  * by functions that wait for permits to become available. This makes it possible
  * to use async/await to synchronize your code.
 */
-export class Semaphore {
-  private _permits: number;
+export default class Semaphore {
+  private permits: number;
   private promiseResolverQueue: Array<(v: boolean) => void> = [];
 
   /**
@@ -22,15 +22,15 @@ export class Semaphore {
    * This number can also be negative.
    */
   constructor(permits: number) {
-    this._permits = permits;
+    this.permits = permits;
   }
 
   /**
    * Returns the number of available permits.
    * @returns  The number of available permits.
    */
-  get permits(): number {
-    return this._permits;
+  get permits: number {
+    return this.permits;
   }
 
   /**
@@ -38,8 +38,8 @@ export class Semaphore {
    * @returns  A promise that gets resolved when execution is allowed to proceed.
    */
   async wait(): Promise<boolean> {
-    if (this._permits > 0) {
-      this._permits -= 1;
+    if (this.permits > 0) {
+      this.permits -= 1;
       return Promise.resolve(true);
     }
 
@@ -63,8 +63,8 @@ export class Semaphore {
    * false if the time given elapses before a permit becomes available.
    */
   async waitFor(milliseconds: number): Promise<boolean> {
-    if (this._permits > 0) {
-      this._permits -= 1;
+    if (this.permits > 0) {
+      this.permits -= 1;
       return Promise.resolve(true);
     }
 
@@ -103,8 +103,8 @@ export class Semaphore {
    * @returns  Whether a permit could be acquired.
    */
   tryAcquire(): boolean {
-    if (this._permits > 0) {
-      this._permits -= 1;
+    if (this.permits > 0) {
+      this.permits -= 1;
       return true;
     }
 
@@ -116,9 +116,9 @@ export class Semaphore {
    * @returns  Number of acquired permits.
    */
   drainPermits(): number {
-    if (this._permits > 0) {
-      const permitCount = this._permits;
-      this._permits = 0;
+    if (this.permits > 0) {
+      const permitCount = this.permits;
+      this.permits = 0;
       return permitCount;
     }
 
@@ -130,14 +130,14 @@ export class Semaphore {
    * continue to execute in a future iteration of the event loop.
    */
   signal(): void {
-    this._permits += 1;
+    this.permits += 1;
 
-    if (this._permits > 1 && this.promiseResolverQueue.length > 0) {
+    if (this.permits > 1 && this.promiseResolverQueue.length > 0) {
       throw new Error('this._permits should never be > 0 when there is someone waiting.');
-    } else if (this._permits === 1 && this.promiseResolverQueue.length > 0) {
+    } else if (this.permits === 1 && this.promiseResolverQueue.length > 0) {
       // If there is someone else waiting, immediately consume the permit that was released
       // at the beginning of this function and let the waiting function resume.
-      this._permits -= 1;
+      this.permits -= 1;
 
       const nextResolver = this.promiseResolverQueue.shift();
       if (nextResolver) {

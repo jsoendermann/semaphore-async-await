@@ -1,13 +1,12 @@
 {
   "include": [
-    "src/**/*.ts"
+    "Semaphore.ts"
   ],
   "compilerOptions": {
-    "target": "es6",
+    "target": "es3",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "declaration": true,
-    "outDir": "dist",
-    "skipLibCheck": true
+    "outDir": "dist"
   }
 }
