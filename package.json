@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "gulp",
     "generate-docs": "typedoc --tsconfig ./tsconfig-typedoc.json --theme minimal --mode file --module system --out docs ./Semaphore.ts",
     "prepublish": "npm run build",
     "test": "node_modules/jasmine-es6/bin/jasmine.js && ava"
@@ -20,12 +20,17 @@
   "engines": {
     "node": ">=4.1"
   },
-  "main": "./dist/Semaphore.js",
-  "typings": "./dist/Semaphore.d.ts",
+  "main": "./dist/index.js",
+  "typings": "./dist/definitions/index.d.ts",
   "devDependencies": {
-    "@types/core-js": "^0.9.35",
     "ava": "^0.18.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-latest": "^6.22.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-typescript": "^3.1.5",
     "jasmine-es6": "^0.4.0",
+    "merge2": "^1.0.3",
     "tslint": "^4.1.0",
     "typedoc": "^0.5.1",
     "typescript": "^2.1.4"
