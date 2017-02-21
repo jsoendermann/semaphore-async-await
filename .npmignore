@@ -9,3 +9,4 @@ tslint.json
 yarn.lock
 docs
 .vscode
+yarn-error.log
