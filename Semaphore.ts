@@ -26,6 +26,14 @@ export default class Semaphore {
   }
 
   /**
+   * Returns the number of available permits.
+   * @returns  The number of available permits.
+   */
+  getPermits(): number {
+    return this.permits;
+  }
+
+  /**
    * Returns a promise used to wait for a permit to become available. This method should be awaited on.
    * @returns  A promise that gets resolved when execution is allowed to proceed.
    */
