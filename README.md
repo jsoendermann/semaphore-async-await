@@ -2,6 +2,9 @@
 
 A promise-based semaphore implementation suitable to be used with async/await.
 
+## I've never heard of semaphores, all I need is a lock.
+Just ```javascript import { Lock } from 'semaphore-async-await'```, wait for it with ```javascript await lock.acquire()``` and release the lock when you're done by calling ```javascript lock.release()```.
+
 ## But JavaScript is single-threaded and doesn't need semaphores!
 This package can be used to synchronize functions that span multiple iterations of the event loop and prevent other code from being executed while your function is waiting.
 

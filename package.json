@@ -1,6 +1,6 @@
 {
   "name": "semaphore-async-await",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "author": {
     "name": "Jan Soendermann",
     "email": "jan.soendermann+npm@gmail.com"
@@ -20,8 +20,8 @@
   "engines": {
     "node": ">=4.1"
   },
-  "main": "./dist/Semaphore.js",
-  "typings": "./dist/Semaphore.d.ts",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "devDependencies": {
     "jasmine-es6": "^0.4.0",
     "tslint": "^4.1.0",

@@ -2,12 +2,13 @@
 /* eslint prefer-arrow-callback:0, func-names:0, global-require:0, import/no-extraneous-dependencies:0 */
 import install from 'jasmine-es6';
 
+
 install();
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
 describe('Semaphore', function () {
-  const Semaphore = require('../dist/Semaphore').default;
+  const Semaphore = require('../dist/').default;
 
   it('without semaphore', async function () {
     let global = 0;
