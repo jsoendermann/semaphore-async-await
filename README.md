@@ -2,7 +2,7 @@
 
 A promise-based semaphore implementation suitable to be used with async/await.
 
-## I've never heard of semaphores, all I need is a lock.
+## Spare me the details, all I need is a lock.
 Just ```import { Lock } from 'semaphore-async-await'```, acquire the lock by calling ```await lock.acquire()``` and release it when you're done by calling ```lock.release()```.
 
 ## But JavaScript is single-threaded and doesn't need semaphores!
