@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>semaphore-async-await | semaphore-async-await</title>
+	<title>Lock | semaphore-async-await</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">/*! normalize.css v1.1.3 | MIT License | git.io/normalize */
@@ -909,116 +909,381 @@ img { max-width: 100%; }
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
-		<li class=" tsd-kind-class">
-			<a href="classes/lock.html" class="tsd-kind-icon">Lock</a>
+		<li class="current tsd-kind-class">
+			<a href="lock.html" class="tsd-kind-icon">Lock</a>
+			<ul>
+				<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+					<a href="lock.html#constructor" class="tsd-kind-icon">constructor</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="lock.html#acquire" class="tsd-kind-icon">acquire</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="lock.html#drainpermits" class="tsd-kind-icon">drain<wbr>Permits</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a href="lock.html#execute" class="tsd-kind-icon">execute</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="lock.html#getpermits" class="tsd-kind-icon">get<wbr>Permits</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="lock.html#release" class="tsd-kind-icon">release</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="lock.html#signal" class="tsd-kind-icon">signal</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="lock.html#tryacquire" class="tsd-kind-icon">try<wbr>Acquire</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="lock.html#wait" class="tsd-kind-icon">wait</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a href="lock.html#waitfor" class="tsd-kind-icon">wait<wbr>For</a>
+				</li>
+			</ul>
 		</li>
 		<li class=" tsd-kind-class">
-			<a href="classes/semaphore.html" class="tsd-kind-icon">Semaphore</a>
+			<a href="semaphore.html" class="tsd-kind-icon">Semaphore</a>
 		</li>
 	</ul>
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
 		<div class="tsd-panel tsd-typography">
-			<h1 id="javascript-semaphore">JavaScript Semaphore</h1>
-			<p>A promise-based semaphore implementation suitable to be used with async/await.</p>
-			<h2 id="spare-me-the-details-all-i-need-is-a-lock-">Spare me the details, all I need is a lock.</h2>
-			<p>Just <code>import { Lock } from &#39;semaphore-async-await&#39;</code>, acquire the lock by calling <code>await lock.acquire()</code> and release it when you&#39;re done by calling <code>lock.release()</code>.</p>
-			<h2 id="but-javascript-is-single-threaded-and-doesn-t-need-semaphores-">But JavaScript is single-threaded and doesn&#39;t need semaphores!</h2>
-			<p>This package can be used to synchronize functions that span multiple iterations of the event loop and prevent other code from being executed while your function is waiting.</p>
-			<p>Suppose you have a function</p>
-			<pre><code class="lang-javascript"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">criticalFunction</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> getDataFromDb();
-  <span class="hljs-keyword">const</span> modifiedData = <span class="hljs-keyword">await</span> asynchronouslyDoStuffWithData(data);
-  <span class="hljs-keyword">return</span> writeDataBackToDb(modifiedData);
-}
-</code></pre>
-			<p>Calling this function repeatedly could lead to overlapping read/writes. To avoid this problem, a lock can be added like so:</p>
-			<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> lock = <span class="hljs-keyword">new</span> Semaphore(<span class="hljs-number">1</span>);
-
-<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">criticalFunctionSynchronous</span>(<span class="hljs-params"></span>) </span>{
-  <span class="hljs-keyword">await</span> lock.acquire();
-
-  <span class="hljs-keyword">await</span> criticalFunction();
-
-  lock.release();
-}
-</code></pre>
-			<p>Asynchronous functions like <code>criticalFunction</code> are executed in multiple chunks of code on the event loop, this package makes it possible to enforce an ordering in these chunks.</p>
-			<h2 id="install">Install</h2>
-			<p><code>yarn add semaphore-async-await</code></p>
-			<p><a href="http://jsoendermann.github.io/semaphore-async-await/classes/semaphore.html"><h2>API</h2></a></p>
-			<h2 id="usage">Usage</h2>
-			<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> Semaphore <span class="hljs-keyword">from</span> <span class="hljs-string">'semaphore-async-await'</span>;
-
-<span class="hljs-function">(<span class="hljs-params"><span class="hljs-keyword">async</span> (</span>) =&gt;</span> {
-
-  <span class="hljs-comment">// A Semaphore with one permit is a lock</span>
-  <span class="hljs-keyword">const</span> lock = <span class="hljs-keyword">new</span> Semaphore(<span class="hljs-number">1</span>);
-
-  <span class="hljs-comment">// Helper function used to wait for the given number of milliseconds</span>
-  <span class="hljs-keyword">const</span> wait = <span class="hljs-function">(<span class="hljs-params">ms</span>) =&gt;</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">r</span> =&gt;</span> setTimeout(r, ms));
-
-  <span class="hljs-keyword">let</span> globalVar = <span class="hljs-number">0</span>;
-
-  <span class="hljs-function">(<span class="hljs-params"><span class="hljs-keyword">async</span> (</span>) =&gt;</span> {
-    <span class="hljs-comment">// This waits (without blocking the event loop) until a permit becomes available</span>
-    <span class="hljs-keyword">await</span> lock.wait();
-    <span class="hljs-keyword">const</span> localCopy = globalVar;
-    <span class="hljs-keyword">await</span> wait(<span class="hljs-number">500</span>);
-    globalVar = localCopy + <span class="hljs-number">1</span>;
-    <span class="hljs-comment">// Signal releases the lock and lets other things run</span>
-    lock.signal();
-  })();
-
-  <span class="hljs-comment">// This returns false because the function above has acquired the lock</span>
-  <span class="hljs-comment">// and is scheduled to continue executing once the main function yields or</span>
-  <span class="hljs-comment">// returns</span>
-  <span class="hljs-built_in">console</span>.log(lock.tryAcquire() === <span class="hljs-literal">false</span>);
-
-  <span class="hljs-comment">// Similar to the function above but using waitFor instead of wait. We</span>
-  <span class="hljs-comment">// give it five seconds to wait which is enough time for it to acquire</span>
-  <span class="hljs-comment">// the lock</span>
-  (<span class="hljs-keyword">async</span> () =&gt; {
-    <span class="hljs-comment">// This waits for at least five seconds, trying to acquire a permit.</span>
-    <span class="hljs-keyword">const</span> didAcquireLock = <span class="hljs-keyword">await</span> lock.waitFor(<span class="hljs-number">5000</span>);
-    <span class="hljs-keyword">if</span> (didAcquireLock) {
-      <span class="hljs-keyword">const</span> localCopy = globalVar;
-      <span class="hljs-keyword">await</span> wait(<span class="hljs-number">500</span>);
-      globalVar = localCopy + <span class="hljs-number">1</span>;
-      <span class="hljs-comment">// Signal releases the lock and lets other things run</span>
-      lock.signal();
-    }
-  })();
-
-  <span class="hljs-comment">// Alternative to using wait()/signal() directly</span>
-  lock.execute(<span class="hljs-keyword">async</span> () =&gt; {
-    <span class="hljs-keyword">const</span> localCopy = globalVar;
-    <span class="hljs-keyword">await</span> wait(<span class="hljs-number">500</span>);
-    globalVar = localCopy + <span class="hljs-number">1</span>;
-  });
-
-  <span class="hljs-comment">// Wait for everything to finish</span>
-  <span class="hljs-keyword">await</span> wait(<span class="hljs-number">2000</span>);
-
-  <span class="hljs-built_in">console</span>.log(globalVar === <span class="hljs-number">3</span>);
-})();
-</code></pre>
-			<h2 id="license">License</h2>
-			<p>MIT</p>
 		</div>
+		<section class="tsd-panel tsd-comment">
+			<div class="tsd-comment tsd-typography">
+				<div class="lead">
+					<p>A lock that can be used to synchronize critical sections in your code.
+						For more details on how to use this class, please view the documentation
+					of the Semaphore class from which Lock inherits.</p>
+				</div>
+			</div>
+		</section>
+		<section class="tsd-panel tsd-hierarchy">
+			<h3>Hierarchy</h3>
+			<ul class="tsd-hierarchy">
+				<li>
+					<a href="semaphore.html" class="tsd-signature-type">Semaphore</a>
+					<ul class="tsd-hierarchy">
+						<li>
+							<span class="target">Lock</span>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section ">
-						<h3>Classes</h3>
+						<h3>Constructors</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-class"><a href="classes/lock.html" class="tsd-kind-icon">Lock</a></li>
-							<li class="tsd-kind-class"><a href="classes/semaphore.html" class="tsd-kind-icon">Semaphore</a></li>
+							<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="lock.html#constructor" class="tsd-kind-icon">constructor</a></li>
+						</ul>
+					</section>
+					<section class="tsd-index-section tsd-is-inherited">
+						<h3>Methods</h3>
+						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="lock.html#acquire" class="tsd-kind-icon">acquire</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="lock.html#drainpermits" class="tsd-kind-icon">drain<wbr>Permits</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="lock.html#execute" class="tsd-kind-icon">execute</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="lock.html#getpermits" class="tsd-kind-icon">get<wbr>Permits</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="lock.html#release" class="tsd-kind-icon">release</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="lock.html#signal" class="tsd-kind-icon">signal</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="lock.html#tryacquire" class="tsd-kind-icon">try<wbr>Acquire</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="lock.html#wait" class="tsd-kind-icon">wait</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="lock.html#waitfor" class="tsd-kind-icon">wait<wbr>For</a></li>
 						</ul>
 					</section>
 				</div>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group ">
+			<h2>Constructors</h2>
+			<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+				<a name="constructor" class="tsd-anchor"></a>
+				<h3>constructor</h3>
+				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Lock<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="lock.html" class="tsd-signature-type">Lock</a></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Overrides <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#constructor">constructor</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Lock.ts#L9">Lock.ts:9</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Creates a lock.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <a href="lock.html" class="tsd-signature-type">Lock</a></h4>
+					</li>
+				</ul>
+			</section>
+		</section>
+		<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="acquire" class="tsd-anchor"></a>
+				<h3>acquire</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">acquire<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#acquire">acquire</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Semaphore.ts#L55">Semaphore.ts:55</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Alias for <a href="semaphore.html#wait"><code>Semaphore.wait</code></a>.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>A promise that gets resolved when execution is allowed to proceed.</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="drainpermits" class="tsd-anchor"></a>
+				<h3>drain<wbr>Permits</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">drain<wbr>Permits<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#drainpermits">drainPermits</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Semaphore.ts#L118">Semaphore.ts:118</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Acquires all permits that are currently available and returns the number of acquired permits.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>Number of acquired permits.</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+				<a name="execute" class="tsd-anchor"></a>
+				<h3>execute</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">execute&lt;T&gt;<span class="tsd-signature-symbol">(</span>func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#execute">execute</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Semaphore.ts#L162">Semaphore.ts:162</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Schedules func to be called once a permit becomes available. Returns a promise that resolves to the return value of func.</p>
+							</div>
+						</div>
+						<h4 class="tsd-type-parameters-title">Type parameters</h4>
+						<ul class="tsd-type-parameters">
+							<li>
+								<h4>T</h4>
+								<div class="tsd-comment tsd-typography">
+									<p>The return type of func.</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>func: <span class="tsd-signature-type">function</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The function to be executed.</p>
+								</div>
+								<ul class="tsd-parameters">
+									<li class="tsd-parameter-siganture">
+										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+										</ul>
+										<ul class="tsd-descriptions">
+											<li class="tsd-description">
+												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>A promise that gets resolved with the return value of the function.</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="getpermits" class="tsd-anchor"></a>
+				<h3>get<wbr>Permits</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Permits<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#getpermits">getPermits</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Semaphore.ts#L32">Semaphore.ts:32</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns the number of available permits.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						<p>The number of available permits.</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="release" class="tsd-anchor"></a>
+				<h3>release</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">release<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#release">release</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Semaphore.ts#L152">Semaphore.ts:152</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Alias for <a href="semaphore.html#signal"><code>Semaphore.signal</code></a>.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="signal" class="tsd-anchor"></a>
+				<h3>signal</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">signal<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#signal">signal</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Semaphore.ts#L132">Semaphore.ts:132</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Increases the number of permits by one. If there are other functions waiting, one of them will
+								continue to execute in a future iteration of the event loop.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="tryacquire" class="tsd-anchor"></a>
+				<h3>try<wbr>Acquire</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">try<wbr>Acquire<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#tryacquire">tryAcquire</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Semaphore.ts#L105">Semaphore.ts:105</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Synchronous function that tries to acquire a permit and returns true if successful, false otherwise.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						<p>Whether a permit could be acquired.</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="wait" class="tsd-anchor"></a>
+				<h3>wait</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">wait<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#wait">wait</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Semaphore.ts#L40">Semaphore.ts:40</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Returns a promise used to wait for a permit to become available. This method should be awaited on.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>A promise that gets resolved when execution is allowed to proceed.</p>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<a name="waitfor" class="tsd-anchor"></a>
+				<h3>wait<wbr>For</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<li class="tsd-signature tsd-kind-icon">wait<wbr>For<span class="tsd-signature-symbol">(</span>milliseconds<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="semaphore.html">Semaphore</a>.<a href="semaphore.html#waitfor">waitFor</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/jsoendermann/semaphore-async-await/blob/29d060c/src/Semaphore.ts#L65">Semaphore.ts:65</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Same as <a href="semaphore.html#wait"><code>Semaphore.wait</code></a> except the promise returned gets resolved with false if no permit becomes available in time.</p>
+							</div>
+						</div>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>milliseconds: <span class="tsd-signature-type">number</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<p>The time spent waiting before the wait is aborted. This is a lower bound, don&#39;t rely on it being precise.</p>
+								</div>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<p>A promise that gets resolved with true when execution is allowed to proceed or
+						false if the time given elapses before a permit becomes available.</p>
+					</li>
+				</ul>
 			</section>
 		</section>
 		<footer class="with-border-bottom">

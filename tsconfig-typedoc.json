@@ -1,6 +1,6 @@
 {
   "include": [
-    "Semaphore.ts"
+    "src/**/*.ts"
   ],
   "compilerOptions": {
     "target": "es6",
