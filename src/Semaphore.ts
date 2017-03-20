@@ -1,16 +1,16 @@
 /** Class representing a semaphore
  * Semaphores are initialized with a number of permits that get aquired and released
  * over the lifecycle of the Semaphore. These permits limit the number of simultaneous
- * executions of the code that the Semaphore synchronizes. Functions can wait and stop 
+ * executions of the code that the Semaphore synchronizes. Functions can wait and stop
  * executing until a permit becomes available.
- * 
+ *
  * Locks that only allow one execution of a critical section are a special case of
  * Semaphores. To construct a lock, initialize a Semaphore with a permit count of 1.
- * 
+ *
  * This Semaphore class is implemented with the help of promises that get returned
  * by functions that wait for permits to become available. This makes it possible
  * to use async/await to synchronize your code.
-*/
+ */
 export default class Semaphore {
   private permits: number;
   private promiseResolverQueue: Array<(v: boolean) => void> = [];
@@ -29,7 +29,7 @@ export default class Semaphore {
    * Returns the number of available permits.
    * @returns  The number of available permits.
    */
-  getPermits(): number {
+  public getPermits(): number {
     return this.permits;
   }
 
@@ -37,7 +37,7 @@ export default class Semaphore {
    * Returns a promise used to wait for a permit to become available. This method should be awaited on.
    * @returns  A promise that gets resolved when execution is allowed to proceed.
    */
-  async wait(): Promise<boolean> {
+  public async wait(): Promise<boolean> {
     if (this.permits > 0) {
       this.permits -= 1;
       return Promise.resolve(true);
@@ -52,17 +52,19 @@ export default class Semaphore {
    * Alias for {@linkcode Semaphore.wait}.
    * @returns  A promise that gets resolved when execution is allowed to proceed.
    */
-  async acquire(): Promise<boolean> {
+  public async acquire(): Promise<boolean> {
     return this.wait();
   }
 
   /**
-   * Same as {@linkcode Semaphore.wait} except the promise returned gets resolved with false if no permit becomes available in time.
-   * @param milliseconds  The time spent waiting before the wait is aborted. This is a lower bound, don't rely on it being precise.
+   * Same as {@linkcode Semaphore.wait} except the promise returned gets resolved with false if no
+   * permit becomes available in time.
+   * @param milliseconds  The time spent waiting before the wait is aborted. This is a lower bound,
+   * don't rely on it being precise.
    * @returns  A promise that gets resolved with true when execution is allowed to proceed or
    * false if the time given elapses before a permit becomes available.
    */
-  async waitFor(milliseconds: number): Promise<boolean> {
+  public async waitFor(milliseconds: number): Promise<boolean> {
     if (this.permits > 0) {
       this.permits -= 1;
       return Promise.resolve(true);
@@ -90,7 +92,7 @@ export default class Semaphore {
         // This is weird... TODO Think about what the best course of action would be at this point.
         // Probably do nothing.
       }
-      
+
       // false because the wait was unsuccessful.
       resolver(false);
     }, milliseconds);
@@ -102,7 +104,7 @@ export default class Semaphore {
    * Synchronous function that tries to acquire a permit and returns true if successful, false otherwise.
    * @returns  Whether a permit could be acquired.
    */
-  tryAcquire(): boolean {
+  public tryAcquire(): boolean {
     if (this.permits > 0) {
       this.permits -= 1;
       return true;
@@ -115,7 +117,7 @@ export default class Semaphore {
    * Acquires all permits that are currently available and returns the number of acquired permits.
    * @returns  Number of acquired permits.
    */
-  drainPermits(): number {
+  public drainPermits(): number {
     if (this.permits > 0) {
       const permitCount = this.permits;
       this.permits = 0;
@@ -129,7 +131,7 @@ export default class Semaphore {
    * Increases the number of permits by one. If there are other functions waiting, one of them will
    * continue to execute in a future iteration of the event loop.
    */
-  signal(): void {
+  public signal(): void {
     this.permits += 1;
 
     if (this.permits > 1 && this.promiseResolverQueue.length > 0) {
@@ -149,17 +151,18 @@ export default class Semaphore {
   /**
    * Alias for {@linkcode Semaphore.signal}.
    */
-  release(): void {
+  public release(): void {
     this.signal();
   }
 
   /**
-   * Schedules func to be called once a permit becomes available. Returns a promise that resolves to the return value of func.
+   * Schedules func to be called once a permit becomes available.
+   * Returns a promise that resolves to the return value of func.
    * @typeparam T  The return type of func.
    * @param func  The function to be executed.
    * @return  A promise that gets resolved with the return value of the function.
    */
-  async execute<T>(func: () => T | PromiseLike<T>): Promise<T> {
+  public async execute<T>(func: () => T | PromiseLike<T>): Promise<T> {
     await this.wait();
     try {
       return await func();

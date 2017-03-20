@@ -15,7 +15,9 @@
     "build": "tsc",
     "generate-docs": "typedoc --tsconfig ./tsconfig-typedoc.json --theme minimal --mode file --module system --out docs ./Semaphore.ts",
     "prepublish": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "lint": "tslint 'src/**/*.ts'",
+    "prepush": "npm run lint"
   },
   "engines": {
     "node": ">=4.1"
@@ -24,6 +26,7 @@
   "typings": "./dist/index.d.ts",
   "devDependencies": {
     "@types/jest": "^19.2.2",
+    "husky": "^0.13.2",
     "jest": "^19.0.2",
     "ts-jest": "^19.0.2",
     "tslint": "^4.5.1",
