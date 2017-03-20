@@ -159,7 +159,7 @@ export default class Semaphore {
    * @param func  The function to be executed.
    * @return  A promise that gets resolved with the return value of the function.
    */
-  async execute<T>(func: () => T): Promise<T> {
+  async execute<T>(func: () => T | PromiseLike<T>): Promise<T> {
     await this.wait();
     try {
       return await func();
