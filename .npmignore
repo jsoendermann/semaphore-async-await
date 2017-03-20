@@ -1,5 +1,6 @@
 src
-spec
+__tests__
+.nvmrc
 node_modules
 .babelrc.json
 .gitignore

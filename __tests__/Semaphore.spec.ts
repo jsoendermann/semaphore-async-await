@@ -1,16 +1,10 @@
-/* global describe, it, expect */
-/* eslint prefer-arrow-callback:0, func-names:0, global-require:0, import/no-extraneous-dependencies:0 */
-import install from 'jasmine-es6';
+import Semaphore from '../src';
 
-
-install();
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
-describe('Semaphore', function () {
-  const Semaphore = require('../dist/').default;
-
-  it('without semaphore', async function () {
+describe('Semaphore', () => {
+  it('without semaphore', async () => {
     let global = 0;
 
     const f = async () => {
@@ -24,7 +18,7 @@ describe('Semaphore', function () {
     expect(global).toEqual(1);
   });
 
-  it('with semaphore', async function () {
+  it('with semaphore', async () => {
     let global = 0;
     const lock = new Semaphore(1);
 
@@ -41,7 +35,7 @@ describe('Semaphore', function () {
     expect(global).toEqual(2);
   });
 
-  it('with execute', async function () {
+  it('with execute', async () => {
     let global = 0;
     const lock = new Semaphore(1);
 
@@ -58,7 +52,7 @@ describe('Semaphore', function () {
     expect(global).toEqual(2);
   });
 
-  it('with a negative number of initial permits', async function () {
+  it('with a negative number of initial permits', async () => {
     const sem = new Semaphore(-2);
     let global = 0;
 
@@ -85,7 +79,7 @@ describe('Semaphore', function () {
     }, 0);
   });
 
-  it('using waitFor successfully', async function () {
+  it('using waitFor successfully', async () => {
     const sem = new Semaphore(0);
 
     (async () => {
@@ -97,7 +91,7 @@ describe('Semaphore', function () {
     sem.signal();
   });
 
-  it('using waitFor unsuccessfully', async function () {
+  it('using waitFor unsuccessfully', async () => {
     const sem = new Semaphore(0);
 
     (async () => {
@@ -109,17 +103,17 @@ describe('Semaphore', function () {
     sem.signal();
   });
 
-  it('tryAcquire successfully', async function () {
+  it('tryAcquire successfully', async () => {
     const sem = new Semaphore(1);
     expect(sem.tryAcquire()).toBeTruthy();
   });
 
-  it('tryAcquire unsuccessfully', async function () {
+  it('tryAcquire unsuccessfully', async () => {
     const sem = new Semaphore(0);
     expect(sem.tryAcquire()).toBeFalsy();
   });
 
-  it('wait after failed waitFor', async function () {
+  it('wait after failed waitFor', async () => {
     const sem = new Semaphore(1);
     let global = 0;
 
