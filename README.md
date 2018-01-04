@@ -26,9 +26,11 @@ const lock = new Semaphore(1);
 async function criticalFunctionSynchronous() {
   await lock.acquire();
 
-  await criticalFunction();
-
-  lock.release();
+  try {
+    await criticalFunction();
+  } finally {
+    lock.release();
+  }
 }
 ```
 
