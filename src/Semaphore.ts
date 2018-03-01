@@ -13,7 +13,11 @@
  */
 export default class Semaphore {
   private permits: number;
+  /** The number of maximum permits that the object has been initialized with. */
+  private maxPermits: number;
   private promiseResolverQueue: Array<(v: boolean) => void> = [];
+  private queueFinishedPromise: Promise<boolean>;
+  private queueFinishedResolver: ((v: boolean) => void);
 
   /**
    * Creates a semaphore.
@@ -23,6 +27,7 @@ export default class Semaphore {
    */
   constructor(permits: number) {
     this.permits = permits;
+    this.maxPermits = permits;
   }
 
   /**
@@ -46,6 +51,22 @@ export default class Semaphore {
     // If there is no permit available, we return a promise that resolves once the semaphore gets
     // signaled enough times that permits is equal to one.
     return new Promise<boolean>(resolver => this.promiseResolverQueue.push(resolver));
+  }
+
+  /**
+   * Returns a promise that resolves when the queue becomes empty i.e. the number of available permits
+   * is equal to the initial maximum. Does not consume a permit. If called multiple times before the queue
+   * becomes empty, they will all return the same promise.
+   */
+  public async finishAll(): Promise<boolean> {
+    if (!this.queueFinishedResolver) {
+      this.queueFinishedPromise = new Promise<boolean>(resolver => {
+        this.queueFinishedResolver = resolver;
+        // We start by instantly checking whether the queue is empty.
+        this.checkAllFinished();
+      });
+    }
+    return this.queueFinishedPromise;
   }
 
   /**
@@ -145,6 +166,9 @@ export default class Semaphore {
       if (nextResolver) {
         nextResolver(true);
       }
+    } else {
+      // If the queue becomes empty, time to resolve finishAll().
+      this.checkAllFinished();
     }
   }
 
@@ -168,6 +192,20 @@ export default class Semaphore {
       return await func();
     } finally {
       this.signal();
+    }
+  }
+
+  /**
+   * Resolves queueFinishedResolver, the resolver function of queueFinishedPromise if the queue is empty
+   * i.e. the number of available permits is equal to the initial maximum.
+   */
+  private checkAllFinished() {
+    if (this.queueFinishedResolver && this.permits === this.maxPermits) {
+      // Before calling the resolver, we create a copy and remove the resolver from the object.
+      // We don't know what happens after resolving so we want that to be the last command.
+      let resolver = this.queueFinishedResolver;
+      delete this.queueFinishedResolver;
+      resolver(true);
     }
   }
 }

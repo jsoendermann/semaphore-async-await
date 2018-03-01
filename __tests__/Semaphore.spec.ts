@@ -168,4 +168,22 @@ describe('Semaphore', () => {
 
     expect(global).toEqual(2);
   });
+
+  it('using finishAll', async () => {
+    let global = 0;
+    const lock = new Semaphore(1);
+
+    const f = async () => {
+      await lock.wait();
+      const local = global;
+      await wait(500);
+      global = local + 1;
+      lock.signal();
+    };
+
+    f(); f(); f(); f();
+    await lock.finishAll();
+
+    expect(global).toEqual(4);
+  });
 });

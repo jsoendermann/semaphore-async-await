@@ -93,7 +93,7 @@ import Semaphore from 'semaphore-async-await';
   });
 
   // Wait for everything to finish
-  await wait(2000);
+  await lock.finishAll();
 
   console.log(globalVar === 3);
 })();
