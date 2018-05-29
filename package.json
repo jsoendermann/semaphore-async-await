@@ -1,14 +1,20 @@
 {
-  "name": "semaphore-async-await",
+  "name": "@gombosg/semaphore-async-await",
   "version": "1.5.2",
   "author": {
     "name": "Jan Soendermann",
     "email": "jan.soendermann+npm@gmail.com"
   },
-  "homepage": "https://github.com/jsoendermann/semaphore-async-await",
+  "contributors": [
+    {
+      "name": "Gergely Gombos",
+      "email": "gombosg+npm@gmail.com"
+    }
+  ],
+  "homepage": "https://github.com/gombosg/semaphore-async-await",
   "repository": {
     "type": "git",
-    "url": "git@github.com:jsoendermann/semaphore-async-await.git"
+    "url": "git@github.com:gombosg/semaphore-async-await.git"
   },
   "license": "MIT",
   "scripts": {

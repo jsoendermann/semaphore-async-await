@@ -1,6 +1,6 @@
 # JavaScript Semaphore
 
-A promise-based semaphore implementation suitable to be used with async/await.
+A promise-based semaphore implementation suitable to be used with async/await. (This fork includes a function to wait for all queued promises to finish.)
 
 ## Spare me the details, all I need is a lock.
 Just ```import { Lock } from 'semaphore-async-await'```, acquire the lock by calling ```await lock.acquire()``` and release it when you're done by calling ```lock.release()```.
