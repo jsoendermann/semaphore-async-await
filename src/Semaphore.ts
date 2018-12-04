@@ -1,11 +1,10 @@
-/** Class representing a semaphore
- * Semaphores are initialized with a number of permits that get aquired and released
- * over the lifecycle of the Semaphore. These permits limit the number of simultaneous
- * executions of the code that the Semaphore synchronizes. Functions can wait and stop
- * executing until a permit becomes available.
+/** Semaphores are initialized with a number of permits that get aquired and released
+ * over the lifecycle of the semaphore. These permits limit the number of simultaneous
+ * executions of the code that the semaphore synchronizes. Functions can wait on a semaphore
+ * and stop executing until a permit becomes available.
  *
- * Locks that only allow one execution of a critical section are a special case of
- * Semaphores. To construct a lock, initialize a Semaphore with a permit count of 1.
+ * Locks are a special case of semaphores that only allow one execution of a critical section.
+ * If you need a lock, you can import the Lock class from this package.
  *
  * This Semaphore class is implemented with the help of promises that get returned
  * by functions that wait for permits to become available. This makes it possible
@@ -17,9 +16,9 @@ export default class Semaphore {
 
   /**
    * Creates a semaphore.
-   * @param permits  The number of permits, i.e. things being allowed to run in parallel.
-   * To create a lock that only lets one thing run at a time, set this to 1.
-   * This number can also be negative.
+   * @param permits  The number of permits, i.e. strands of execution being allowed
+   * to run in parallel.
+   * This number can be initialized with a negative integer.
    */
   constructor(permits: number) {
     this.permits = permits;
@@ -60,8 +59,8 @@ export default class Semaphore {
    * Same as {@linkcode Semaphore.wait} except the promise returned gets resolved with false if no
    * permit becomes available in time.
    * @param milliseconds  The time spent waiting before the wait is aborted. This is a lower bound,
-   * don't rely on it being precise.
-   * @returns  A promise that gets resolved with true when execution is allowed to proceed or
+   * you shouldn't rely on it being precise.
+   * @returns  A promise that gets resolved to true when execution is allowed to proceed or
    * false if the time given elapses before a permit becomes available.
    */
   public async waitFor(milliseconds: number): Promise<boolean> {
@@ -71,8 +70,8 @@ export default class Semaphore {
     }
 
     // We save the resolver function in the current scope so that we can resolve the promise
-    // if the time expires.
-    let resolver: (v: boolean) => void = b => void(0);
+    // to false if the time expires.
+    let resolver: (v: boolean) => void = b => void 0;
     const promise = new Promise<boolean>(r => {
       resolver = r;
     });
@@ -89,8 +88,8 @@ export default class Semaphore {
       if (index !== -1) {
         this.promiseResolverQueue.splice(index, 1);
       } else {
-        // This is weird... TODO Think about what the best course of action would be at this point.
-        // Probably do nothing.
+        // This shouldn't happen, not much we can do at this point
+        console.warn(`Semaphore.waitFor couldn't find its promise resolver in the queue`);
       }
 
       // false because the wait was unsuccessful.
@@ -135,7 +134,7 @@ export default class Semaphore {
     this.permits += 1;
 
     if (this.permits > 1 && this.promiseResolverQueue.length > 0) {
-      throw new Error('this.permits should never be > 0 when there is someone waiting.');
+      console.warn('Semaphore.permits should never be > 0 when there is someone waiting.');
     } else if (this.permits === 1 && this.promiseResolverQueue.length > 0) {
       // If there is someone else waiting, immediately consume the permit that was released
       // at the beginning of this function and let the waiting function resume.
