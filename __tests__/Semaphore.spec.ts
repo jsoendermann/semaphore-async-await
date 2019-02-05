@@ -168,4 +168,33 @@ describe('Semaphore', () => {
 
     expect(global).toEqual(2);
   });
+
+  it('using getPromiseResolverQueueLength successfully', async () => {
+    const lock = new Semaphore(1);
+
+    const f = async (expectedQueueLength: number) => {
+      const waitingFunctions = lock.getPromiseResolverQueueLength();
+      expect(waitingFunctions).toEqual(expectedQueueLength);
+      await lock.wait();
+      await wait(500);
+      lock.signal();
+    };
+
+    // First function
+    // it's the first function, so no one is in the waitingQueue
+    f(0);
+    wait(10);
+    // Second function
+    // the first function is running, so the expected queueLength is 0
+    f(0);
+    wait(10);
+    // Third function
+    // the second function is still waiting for the lock, so the expected queueLength is 1
+    f(1);
+    wait(10);
+    // Fourth function
+    // the second and the third functions are still waiting for the lock, so the expected queueLength is 2
+    f(2);
+    wait(10);
+  });
 });

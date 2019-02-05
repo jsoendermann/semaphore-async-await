@@ -33,6 +33,14 @@ export default class Semaphore {
   }
 
   /**
+   * Returns the number of functions currently waiting for the lock.
+   * @returns  The number of waiting functions.
+   */
+  public getPromiseResolverQueueLength(): number {
+    return this.promiseResolverQueue.length;
+  }
+
+  /**
    * Returns a promise used to wait for a permit to become available. This method should be awaited on.
    * @returns  A promise that gets resolved when execution is allowed to proceed.
    */
