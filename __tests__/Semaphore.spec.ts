@@ -185,15 +185,15 @@ describe('Semaphore', () => {
     f(0);
     wait(10);
     // Second function
-    // the first function is running, so the expected queueLength is 0
+    // the first function is running, so the expected waitingQueue length is still 0
     f(0);
     wait(10);
     // Third function
-    // the second function is still waiting for the lock, so the expected queueLength is 1
+    // the second function is still waiting for the lock, so the expected waitingQueue length is 1
     f(1);
     wait(10);
     // Fourth function
-    // the second and the third functions are still waiting for the lock, so the expected queueLength is 2
+    // the second and the third functions are still waiting for the lock, so the expected waitingQueue length is 2
     f(2);
     wait(10);
   });
